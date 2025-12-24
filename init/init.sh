@@ -24,7 +24,6 @@ progress_bar_task() {
     local filled=$((percent * width / 100))
     local empty=$((width - filled))
 
-    # ★ 关键：回到行首 + 清空整行
     printf "\r\033[K" >&2
 
     printf "[%s] [" "$label" >&2
@@ -92,38 +91,30 @@ retry() {
 }
 
 
-#---------------apt_run（统一 apt UI）----------------
+#------------------------apt_run-------------------
 apt_run() {
   local msg="$1"
   shift
-
-  cecho blue "$msg"
-
   apt -o Dpkg::Progress-Fancy="0" "$@" >/dev/null 2>&1 &
   local pid=$!
-
+  
   progress_bar_task "$pid" "$msg"
   wait "$pid"
 }
 
 
-cecho purple bold "===== VPS 初始开荒脚本 ====="
-cecho purple  "作者：Vesper"
+cecho blue bold "===== VPS 初始开荒脚本 ====="
+cecho blue  "作者：Vesper"
 
 
 #===================｜系统更新｜======================
 cecho blue bold "1.系统更新"
 
-apt_run "apt update" update
-apt_run "apt upgrade" upgrade -y
-
-cecho yellow "   --首次更新结束，进入二次检查"
-
-apt_run "apt update（二次）" update
-
-apt_run "apt upgrade（only-upgrade）" upgrade --only-upgrade -y
-
-cecho green "   --系统更新完成"
+apt_run "获取资源" update
+apt_run "更新" upgrade -y
+apt_run "二次检查" update
+apt_run "二次更新" upgrade --only-upgrade -y
+cecho green "   --完成"
 
 #===================｜工具安装｜======================
 cecho blue bold "2.安装常用工具"
@@ -145,10 +136,13 @@ TOOLS=(
   openvpn
   neofetch
   jq
+  trash-cli
+  inetutils-traceroute
 )
+
 for pkg in "${TOOLS[@]}"; do
   if dpkg -s "$pkg" >/dev/null 2>&1; then
-    cecho cyan "   --$pkg 已安装，跳过"
+    cecho cyan "   --$pkg 已安装"
     continue
   fi
 
@@ -156,69 +150,55 @@ apt -o Dpkg::Progress-Fancy="0" install -y "$pkg" >/dev/null 2>&1 &
 pid=$!
 progress_bar_task "$pid" "install $pkg"
 wait "$pid"
-
   if dpkg -s "$pkg" >/dev/null 2>&1; then
-    cecho green "  --$pkg 安装成功"
+    cecho green "  --$pkg 已安装"
   else
-    cecho yellow "     --$pkg 安装失败，尝试修复"
-
-    apt_run "apt --fix-broken" --fix-broken install -y
+    cecho yellow "     --$pkg 安装失败"
+    apt_run "尝试修复" --fix-broken install -y
     dpkg --configure -a >/dev/null 2>&1
-
 apt -o Dpkg::Progress-Fancy="0" install -y "$pkg" >/dev/null 2>&1 &
 pid=$!
 progress_bar_task "$pid" "install $pkg"
 wait "$pid"
 
     dpkg -s "$pkg" >/dev/null 2>&1 \
-      && cecho green "  --$pkg 安装成功" \
-      || cecho red "  --放弃安装 $pkg "
+      && cecho green "  --$pkg 已安装" \
+      || cecho red "  --$pkg 放弃安装 "
   fi
 done
-
-
 
 #===================｜vim默认｜======================
 
 cecho blue bold "3.设置默认编辑器为 vim"
 
 update-alternatives --set editor /usr/bin/vim.basic >/dev/null 2>&1 && \
-  cecho green "   --默认编辑器已设置为 vim" || \
-  cecho red "   --默认编辑器设置失败/或已存在"
+  cecho green "   --成功" || \
+  cecho red "   --vim设置失败"
 
 #=================｜自动安全更新｜=====================
 cecho blue bold "4.设置自动安全更新"
-
 DEBIAN_FRONTEND=noninteractive apt install -y unattended-upgrades \
   >/dev/null 2>&1
-
 printf "\n" >&2
-
 dpkg-reconfigure --priority=low unattended-upgrades \
   >/dev/null 2>&1 && \
-  cecho green "   --自动安全更新已启用" || \
-  cecho yellow "   --自动安全更新配置异常"
+  cecho green "   --成功" || \
+  cecho yellow "   --启用失败"
 
 #===================｜创建用户｜======================
-cecho blue bold "5.创建用户 Vesper"
-
+cecho blue bold "5.创建用户 vesper"
 if id vesper >/dev/null 2>&1; then
-  cecho cyan "   --用户 vesper 已存在"
+  cecho white "   --用户 vesper 已存在"
 else
-  cecho blue "   --创建用户 vesper "
-
   adduser --disabled-password --gecos "" vesper >/dev/null 2>&1 && \
-  echo "vesper:Cici080306" | chpasswd && \
-  cecho green "   --用户 vesper 创建成功" || \
-  cecho red "   --用户 vesper 创建失败"
+  echo "vesper:Cici080306" | chpasswd || \
+  cecho red "   -- 创建失败"
 fi
-
-usermod -aG sudo vesper >/dev/null 2>&1 && \
-  cecho green "   --已授予 vesper sudo 权限"
-
+usermod -aG sudo vesper >/dev/null 2>&1 || \
+  cecho red "   --授予权限失败"
 echo "vesper ALL=(ALL) ALL" >/etc/sudoers.d/vesper
 chmod 440 /etc/sudoers.d/vesper && \
-  cecho green "   --权限文件修改完成" || \
+  cecho green "   --成功" || \
   cecho red "   --权限文件修改失败"
 
 
@@ -348,15 +328,14 @@ PubkeyAuthentication no
 #-------------------------------------------------------------------
 
 EOF
-
-cecho green "   --SSH 端口已修改为36222"
+cecho green "   --成功"
+cecho yellow "   --SSH 端口已修改为36222"
 #==================｜关闭欢迎语｜=====================
 cecho blue bold "7.关闭 SSH 登录欢迎语"
-
 sed -i 's/^session\s\+optional\s\+pam_motd.so/#&/' /etc/pam.d/sshd
 sed -i 's/^session\s\+optional\s\+pam_motd.so/#&/' /etc/pam.d/login
 sed -i 's/^ENABLED=.*/ENABLED=0/' /etc/default/motd-news
-cecho green "   --SSH 欢迎语与推广已关闭"
+cecho green "   --成功"
 #================｜修改颜色｜====================
 cp /home/vesper/.bashrc /root/.bashrc || true
 cecho blue "8.修改颜色"
@@ -492,7 +471,6 @@ alias php81='php81 -c /www/server/php/81/etc/php-cli.ini'
 EOF
 
 chown vesper:vesper /home/vesper/.bashrc
-cecho green "   --vesper 颜色修改成功"
 
 cat > /root/.bashrc <<'EOF'
 #----------------------------------------------------------------------
@@ -623,13 +601,14 @@ alias rm='trash-put'
 alias php81='php81 -c /www/server/php/81/etc/php-cli.ini'
 #----------------------------------------------------------------------
 EOF
-cecho green "   --root 颜色修改成功"
+cecho green "   --成功"
 #===================｜root密码｜======================
 cecho blue bold "9.设置 root 密码"
 
 echo "root:Cici080306" | chpasswd && \
-  cecho green "   --root密码已设置为 Cici080306" || \
-  cecho red "   --root密码设置失败"
+  cecho yellow "   --密码 Cici080306" && \
+  cecho green "   --成功"|| \
+  cecho red "   --设置失败"
 
 #===================｜Swap｜======================
 cecho blue bold "10.创建Swap"
@@ -638,48 +617,47 @@ SWAP_SIZE=2G
 
 if [[ "$ENABLE_SWAP" == "1" ]]; then
   if swapon --show | grep -q swap; then
-    cecho cyan "   --Swap 已存在，跳过"
+    cecho cyan "   --Swap 已存在 跳过"
   else
-    cecho blue "   --创建 $SWAP_SIZE swapfile"
-
     fallocate -l "$SWAP_SIZE" /swapfile && \
     chmod 600 /swapfile && \
     mkswap /swapfile >/dev/null 2>&1 && \
     swapon /swapfile && \
     echo '/swapfile none swap sw 0 0' >> /etc/fstab && \
-    cecho green "   --Swap 已启用 ($SWAP_SIZE)" || \
+    cecho yellow "   --已启用 ($SWAP_SIZE)" && \
+    cecho green "   --成功" || \
     cecho red "   --Swap 创建失败"
   fi
 else
-  cecho yellow "  --已按配置禁用 swap"
+  cecho red "  --已按配置禁用 swap"
 fi
 #===================｜时区｜======================
 cecho blue bold "11.修改系统时区｜上海 "
 timedatectl set-timezone Asia/Shanghai >/dev/null 2>&1 && \
-  cecho green "   --时区设置成功 " || \
-  cecho red "   ！！时区设置失败！！ "
+  cecho green "   --成功 " || \
+  cecho red "   --设置失败"
 #===================｜界面汉化｜======================
 cecho blue bold "12.语言修改为中文 "
-cecho white "   --开始运行-- " || \
 locale >/dev/null 2>&1
 locale-gen zh_CN.UTF-8 >/dev/null 2>&1
 update-locale LANG=zh_CN.UTF-8 LC_ALL=zh_CN.UTF-8 >/dev/null 2>&1
 cat /etc/default/locale >/dev/null 2>&1
 export LANG=zh_CN.UTF-8 >/dev/null 2>&1
-export LC_ALL=zh_CN.UTF-8 >/dev/null 2>&1
+export LC_ALL=zh_CN.UTF-8 >/dev/null 2>&
 apt_run "检查更新" update
 apt_run "安装zh语言包" install -y language-pack-zh-hans
-cecho green "   --语言设置成功 "
+cecho green "   --成功 "
 #===================｜清理｜======================
 cecho blue bold "13.清理系统垃圾"
 apt_run "apt autoremove" autoremove -y
-apt autoclean -y >/dev/null 2>&1
-
-cecho green "   --系统清理完成"
+apt autoclean -y >/dev/null 2>&1 && \
+cecho green "   --成功"  || \
+  cecho red "   --设置失败"
 
 #===================｜清理｜======================
 cecho white "--中文语言环境已配置 执行 exit ，重新连接ssh后即可生效
-重连后您可使用 ls /not-exist 检查来检查是否配置成功
-如有任何问题可反馈至 shuhany86@gmail.com"
+重连后您可使用 ls /not-exist 检查来检查是否配置成功 "
+
+cecho white "如有任何问题可反馈至 shuhany86@gmail.com"
 cecho purple "  -------感谢使用本脚本------"
 cecho purple bold "===== VPS 初始开荒完成 ====="
