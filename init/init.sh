@@ -643,7 +643,7 @@ locale-gen zh_CN.UTF-8 >/dev/null 2>&1
 update-locale LANG=zh_CN.UTF-8 LC_ALL=zh_CN.UTF-8 >/dev/null 2>&1
 cat /etc/default/locale >/dev/null 2>&1
 export LANG=zh_CN.UTF-8 >/dev/null 2>&1
-export LC_ALL=zh_CN.UTF-8 >/dev/null 2>&
+export LC_ALL=zh_CN.UTF-8 >/dev/null 2>&1
 apt_run "检查更新" update
 apt_run "安装zh语言包" install -y language-pack-zh-hans
 cecho green "   --成功 "
