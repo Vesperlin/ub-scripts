@@ -126,6 +126,6 @@ cecho green  "请输入MySQL数据库密码 "
 read -p "直接回车默认随机生成 >" MYSQLpassword && export MYSQLpassword ||apt install -y uuid-runtime >/dev/null 2>&1 && MYSQLpassword=$(uuidgen) && export MYSQLpassword
 cecho green  "请输入JWT密码 "
 read -p "直接回车默认随机生成 >" JWTpassword && export JWTpassword ||apt install -y uuid-runtime >/dev/null 2>&1 && JWTpassword=$(uuidgen) && export JWTpassword
-bash https://raw.githubusercontent.com/Vesperlin/VPS-Scripts/refs/heads/main/init/ppanel-api.sh /dev/null 2>&1
+bash <(curl -sL https://raw.githubusercontent.com/Vesperlin/VPS-Scripts/refs/heads/main/init/ppanel-api.sh) /dev/null 2>&1
 
 
