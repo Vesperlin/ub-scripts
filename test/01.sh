@@ -134,10 +134,7 @@ do_action() {
       ;;
     4)
       cecho ">>>  硬件测试"
-      wget -q https://github.com/Aniverse/A/raw/i/a>/dev/null 2>&1 && bash a                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  Retry  Reason  Retry  Reason        Retry  ReasonRetry  Reason  Retry  Reason    Retry  ReasonRetry  Reason    Retry  Reason    Retry  Reason    Retry  Reason      Retry  Reason      Retry  Reason  Retry  ReasonRetry  Reason  Retry  ReasonRetry  ReasonRetry  ReasonRetry  ReasonRetry  ReasonRetry  ReasonRetry  Reason  Retry  ReasonRetry  ReasonRetry  ReasonRetry  ReasonRetry  ReasonRetry  ReasonRetry  ReasonRetry  Reason      Retry  ReasonRetry  Reason      Retry  ReasonRetry  Reason  Retry  Reason        Retry  Reason    Retry  ReasonRetry  ReasonRetry  Reason      Retry  Reason          Retry  Reason        Retry  Reason      Retry  ReasonRetry  Reason      Retry  Reason    Retry  ReasonRetry  ReasonRetry  Reason    Retry  Reason  Retry  ReasonRetry  Reason                  Retry  Reason                                              Retry  Reason        Retry  Reason    Retry  Reason                                            Retry  Reason    Retry  ReasonRetry  Reason        Retry  Reason    Retry  Reason      Retry  ReasonRetry  Reason  Retry  Reason    Retry  Reason    Retry  Reason        Retry  Reason    Retry  Reason
-      ;;
-    5)
-      cecho ">>>  流媒体解锁测试"
+      wget -q https://github.com/Aniverse/A/raw/i/a>/dev/null 2>&1 && bash a                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  Retry  Reason  Retry  Reason        Retry  ReasonRetry  Reason  Retry  Reason    Retry  ReasonRetry  Reason    Retry  Reason    Retry  Reason    Retry  Reason      Retry  Reason      Retry  Reason  Retry  ReasonRetry  Reason  Retry  ReasonRetry  ReasonRetry  ReasonRetry  ReasonRetry  ReasonRetry  ReasonRetry  Reason  Retry  ReasonRetry  ReasonRetry  ReasonRetry  ReasonRetry  ReasonRetry  ReasonRetry  ReasonRetry  Reason      Retry  ReasonRetry  Reason      Retry  ReasonRetry  Reason  Retry  Reason        Retry  Reason    Retry  ReasonRetry  ReasonRetry  Reason      Retry  Reason          Retry  Reason        Retry  Reason      Retry  ReasonRetry  Reason      Retry  Reason    Retry  ReasonRetry  ReasonRetry  Reason    Retry  Reason  Retry  ReasonRetry  Reason                  Retry  Reason                                              Retry  Reason     ">>>  流媒体解锁测试"
       bash <(curl -L -s check.unlock.media)
       ;;
     6)
@@ -145,28 +142,28 @@ do_action() {
       curl https://raw.githubusercontent.com/ludashi2020/backtrace/main/install.sh -sSf | sh    
       ;;
     7)
-      cecho "全球速度测试"
+      cecho white "全球速度测试"
       wget -qO- nws.sh | bash
       ;;
     8)
-      cecho ">>>  IP质量"
+      cecho white ">>>  IP质量"
       bash <(curl -sL IP.Check.Place)
       ;;
     9)
-      cecho ">>>  流媒体测试"
+      cecho white ">>>  流媒体测试"
       curl bash <(wget -qO- https://down.vpsaff.net/linux/speedtest/superbench.sh) -m  
       ;;
     10)
-      cecho ">>>  三网回程详细"
+      cecho white ">>>  三网回程详细"
       wget -qO- git.io/besttrace | bash
       rm /usr/local/bin/nexttrace
       ;;
     11)
-      cecho ">>>  三网回程线路质量"
+      cecho white ">>>  三网回程线路质量"
       curl https://raw.githubusercontent.com/ludashi2020/backtrace/main/install.sh -sSf | sh
       ;;
     12)
-      cecho ">>>  四网路由"
+      cecho white ">>>  四网路由"
       curl https://raw.githubusercontent.com/ludashi2020/backtrace/main/install.sh -sSf | sh                                                                                                                                                                                                                                                                                                        
       ;;
       
@@ -176,23 +173,22 @@ do_action() {
 # ========= 主循环 =========
 while true; do
   clear
-  cecho "
-Vesper 管理面板
-------------------------------------------------
-0. 回到上一层
-------------------------------------------------
-1. 磁盘读写测试
-2. 带宽 IO CPU 一键测试
-3. 查看系统数据
-4. 硬件测试
-5. 流媒体解锁测试
-6. 三网回程线路质量
-7. 全球速度测试
-8. IP质量
-9. 流媒体测试
-10. 三网回程详细
-11. 三网回程线路质量
-12. 四网路由
+  cecho white "Vesper 管理面板"
+  cecho white "------------------------------------------------"
+  cecho white"0. 回到上一层"
+  cecho white "------------------------------------------------"
+  cecho white "1. 磁盘读写测试"
+  cecho white "2. 带宽 IO CPU 一键测试"
+  cecho white "3. 查看系统数据"
+  cecho white "4. 硬件测试"
+  cecho white "5. 流媒体解锁测试"
+  cecho white "6. 三网回程线路质量"
+  cecho white "7. 全球速度测试"
+  cecho white "8. IP质量"
+  cecho white "9. 流媒体测试"
+  cecho white "10. 三网回程详细"
+  cecho white "11. 三网回程线路质量"
+  cecho white"12. 四网路由"
 ------------------------------------------------"
 
   read -rp "请选择要执行的操作：" choice
