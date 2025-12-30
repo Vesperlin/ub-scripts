@@ -99,51 +99,25 @@ apt_run() {
   local pid=$!
   
   progress_bar_task "$pid" "$msg"
-  wait "$pid"
+  wait "$pid"  
 }
 
 #------------------------------------------------
 pause() {
-  echo
-  read -rp "请选择要执行的操作："
+  cecho
+  cecho -rp "请选择要执行的操作："
 }
 
 error_msg() {
-  echo
-  echo red "未输入有效数字"
+  cecho
+  cecho red "未输入有效数字"
   sleep 1
 }
 
-A1="磁盘读写测试"
-B1="dd if=/dev/zero of=test bs=64k count=4k oflag=dsync"
-A2="带宽 IO CPU 一键测试"
-B2="wget -qO- bench.sh | bash"
-A3="查看系统数据"
-B3="apt install neofetch -y >/dev/null 2>&1 && neofetch"
-A4="硬件测试"
-B4="wget -q https://github.com/Aniverse/A/raw/i/a>/dev/null 2>&1 && bash a"
-A5="流媒体解锁测试"
-B5="bash <(curl -L -s check.unlock.media)"
-A6="三网回程线路质量"
-B6="curl https://raw.githubusercontent.com/ludashi2020/backtrace/main/install.sh -sSf | sh"
-A7="全球速度测试"
-B7="wget -qO- nws.sh | bash"
-A8="IP质量"
-B8="bash <(curl -sL IP.Check.Place)"
-A9="流媒体测试"
-B9="curl bash <(wget -qO- https://down.vpsaff.net/linux/speedtest/superbench.sh) -m"
-A10="三网回程详细"
-B10="wget -qO- git.io/besttrace | bash
-      rm /usr/local/bin/nexttrace"
-A11="三网回程线路质量"
-B11="curl https://raw.githubusercontent.com/ludashi2020/backtrace/main/install.sh -sSf | sh"
-A12="四网路由"
-B12="curl https://raw.githubusercontent.com/ludashi2020/backtrace/main/install.sh -sSf | sh"
 # ========= 菜单展示 =========
-show_menu() {
-  clear
-  cat <<'EOF'
-Vesper 管理面板
+
+
+menu="Vesper 管理面板
 ------------------------------------------------
 0. 回到上一层
 ------------------------------------------------
@@ -159,61 +133,59 @@ Vesper 管理面板
 10. 三网回程详细
 11. 三网回程线路质量
 12. 四网路由
-------------------------------------------------
-EOF
-}
+------------------------------------------------"
 
 # ========= 具体动作 =========
 do_action() {
   case "$1" in
     1)
-      echo ">>>  磁盘读写测试"
+      cecho ">>>  磁盘读写测试"
       dd if=/dev/zero of=test bs=64k count=4k oflag=dsync
       ;;
     2)
-      echo ">>>  带宽 IO CPU 一键测试"
+      cecho ">>>  带宽 IO CPU 一键测试"
       wget -qO- bench.sh | bash
       ;;
     3)
-      echo ">>>  查看系统数据"
+      cecho ">>>  查看系统数据"
       apt install neofetch -y >/dev/null 2>&1 && neofetch
       ;;
     4)
-      echo ">>>  硬件测试"
-      wget -q https://github.com/Aniverse/A/raw/i/a>/dev/null 2>&1 && bash a
+      cecho ">>>  硬件测试"
+      wget -q https://github.com/Aniverse/A/raw/i/a>/dev/null 2>&1 && bash a                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  Retry  Reason  Retry  Reason        Retry  ReasonRetry  Reason  Retry  Reason    Retry  ReasonRetry  Reason    Retry  Reason    Retry  Reason    Retry  Reason      Retry  Reason      Retry  Reason  Retry  ReasonRetry  Reason  Retry  ReasonRetry  ReasonRetry  ReasonRetry  ReasonRetry  ReasonRetry  ReasonRetry  Reason  Retry  ReasonRetry  ReasonRetry  ReasonRetry  ReasonRetry  ReasonRetry  ReasonRetry  ReasonRetry  Reason      Retry  ReasonRetry  Reason      Retry  ReasonRetry  Reason  Retry  Reason        Retry  Reason    Retry  ReasonRetry  ReasonRetry  Reason      Retry  Reason          Retry  Reason        Retry  Reason      Retry  ReasonRetry  Reason      Retry  Reason    Retry  ReasonRetry  ReasonRetry  Reason    Retry  Reason  Retry  ReasonRetry  Reason                  Retry  Reason                                              Retry  Reason        Retry  Reason    Retry  Reason                                            Retry  Reason    Retry  ReasonRetry  Reason        Retry  Reason    Retry  Reason      Retry  ReasonRetry  Reason  Retry  Reason    Retry  Reason    Retry  Reason        Retry  Reason    Retry  Reason
       ;;
     5)
-      echo ">>>  流媒体解锁测试"
+      cecho ">>>  流媒体解锁测试"
       bash <(curl -L -s check.unlock.media)
       ;;
     6)
-      echo ">>>  三网回程线路质量"
-      curl https://raw.githubusercontent.com/ludashi2020/backtrace/main/install.sh -sSf | sh
+      cecho ">>>  三网回程线路质量"
+      curl https://raw.githubusercontent.com/ludashi2020/backtrace/main/install.sh -sSf | sh    
       ;;
     7)
-      echo "全球速度测试"
+      cecho "全球速度测试"
       wget -qO- nws.sh | bash
       ;;
     8)
-      echo ">>>  IP质量"
+      cecho ">>>  IP质量"
       bash <(curl -sL IP.Check.Place)
       ;;
     9)
-      echo ">>>  流媒体测试"
-      curl bash <(wget -qO- https://down.vpsaff.net/linux/speedtest/superbench.sh) -m
+      cecho ">>>  流媒体测试"
+      curl bash <(wget -qO- https://down.vpsaff.net/linux/speedtest/superbench.sh) -m  
       ;;
     10)
-      echo ">>>  三网回程详细"
+      cecho ">>>  三网回程详细"
       wget -qO- git.io/besttrace | bash
       rm /usr/local/bin/nexttrace
       ;;
     11)
-      echo ">>>  三网回程线路质量"
+      cecho ">>>  三网回程线路质量"
       curl https://raw.githubusercontent.com/ludashi2020/backtrace/main/install.sh -sSf | sh
       ;;
     12)
-      echo ">>>  四网路由"
-      curl https://raw.githubusercontent.com/ludashi2020/backtrace/main/install.sh -sSf | sh
+      cecho ">>>  四网路由"
+      curl https://raw.githubusercontent.com/ludashi2020/backtrace/main/install.sh -sSf | sh                                                                                                                                                                                                                                                                                                        
       ;;
       
   esac
@@ -221,8 +193,9 @@ do_action() {
 
 # ========= 主循环 =========
 while true; do
-  show_menu
-  read -rp "Please enter your selection [0-20]: " choice
+  clear
+  cecho $menu
+  read -rp "请选择要执行的操作：" choice
 
   # 空输入
   [[ -z "$choice" ]] && error_msg && continue
@@ -231,11 +204,11 @@ while true; do
   [[ ! "$choice" =~ ^[0-9]+$ ]] && error_msg && continue
 
   # 越界
-  (( choice < 0 || choice > 20 )) && error_msg && continue
+  (( choice < 0 || choice > 12 )) && error_msg && continue
 
   # 退出
   if [[ "$choice" == "0" ]]; then
-    echo "Bye."
+    cecho yellow "Bye."
     exit 0
   fi
 
