@@ -143,26 +143,22 @@ B12="curl https://raw.githubusercontent.com/ludashi2020/backtrace/main/install.s
 show_menu() {
   clear
   cat <<'EOF'
-# ========= 菜单展示 =========
-show_menu() {
-  clear
-  cat <<'EOF'
 Vesper 管理面板
 ------------------------------------------------
 0. 回到上一层
 ------------------------------------------------
-1. $A1
-2. $A2
-3. $A3
-4. $A4
-5. $A5
-6. $A6
-7. $A7
-8. $A8
-9. $A9
-10. $A10
-11. $A11
-12. $A12
+1. 磁盘读写测试
+2. 带宽 IO CPU 一键测试
+3. 查看系统数据
+4. 硬件测试
+5. 流媒体解锁测试
+6. 三网回程线路质量
+7. 全球速度测试
+8. IP质量
+9. 流媒体测试
+10. 三网回程详细
+11. 三网回程线路质量
+12. 四网路由
 ------------------------------------------------
 EOF
 }
@@ -171,52 +167,53 @@ EOF
 do_action() {
   case "$1" in
     1)
-      echo ">>>  $A1"
-      $B1
+      echo ">>>  磁盘读写测试"
+      dd if=/dev/zero of=test bs=64k count=4k oflag=dsync
       ;;
     2)
-      echo ">>>  $A2"
-      $B2
+      echo ">>>  带宽 IO CPU 一键测试"
+      wget -qO- bench.sh | bash
       ;;
     3)
-      echo ">>>  $A3"
-      $B3
+      echo ">>>  查看系统数据"
+      apt install neofetch -y >/dev/null 2>&1 && neofetch
       ;;
     4)
-      echo ">>>  $A4"
-      $B4
+      echo ">>>  硬件测试"
+      wget -q https://github.com/Aniverse/A/raw/i/a>/dev/null 2>&1 && bash a
       ;;
     5)
-      echo ">>>  $A5"
-      $B5
+      echo ">>>  流媒体解锁测试"
+      bash <(curl -L -s check.unlock.media)
       ;;
     6)
-      echo ">>>  $A6"
-      $B6
+      echo ">>>  三网回程线路质量"
+      curl https://raw.githubusercontent.com/ludashi2020/backtrace/main/install.sh -sSf | sh
       ;;
     7)
-      echo ">>>  $A7"
-      $B7
+      echo "全球速度测试"
+      wget -qO- nws.sh | bash
       ;;
     8)
-      echo ">>>  $A8"
-      $B8
+      echo ">>>  IP质量"
+      bash <(curl -sL IP.Check.Place)
       ;;
     9)
-      echo ">>>  $A9"
-      $B9
+      echo ">>>  流媒体测试"
+      curl bash <(wget -qO- https://down.vpsaff.net/linux/speedtest/superbench.sh) -m
       ;;
     10)
-      echo ">>>  $A10"
-      $B10
+      echo ">>>  三网回程详细"
+      wget -qO- git.io/besttrace | bash
+      rm /usr/local/bin/nexttrace
       ;;
     11)
-      echo ">>>  $A11"
-      $B11
+      echo ">>>  三网回程线路质量"
+      curl https://raw.githubusercontent.com/ludashi2020/backtrace/main/install.sh -sSf | sh
       ;;
     12)
-      echo ">>>  $A12"
-      $B12
+      echo ">>>  四网路由"
+      curl https://raw.githubusercontent.com/ludashi2020/backtrace/main/install.sh -sSf | sh
       ;;
       
   esac
